@@ -5,9 +5,7 @@ const AppError=require('./utils/appError');
 
 const globalErrorHandler= require('./controllers/errorController');
 
-console.log(AppError);
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
+// console.log(AppError);
 
 const app = express();
 
@@ -25,6 +23,8 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter);

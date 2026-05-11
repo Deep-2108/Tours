@@ -97,12 +97,12 @@ tourSchema.pre('save',function(next){
 });
 
 tourSchema.pre('save',function(next){
-  console.log('Will save document ');
+  // console.log('Will save document ');
   next();
 })
 
 tourSchema.post('save',function(doc,next){
-  console.log(doc);
+  // console.log(doc);
   next();
 });
 
@@ -113,13 +113,13 @@ tourSchema.pre(/^find/,function(next){
 });
 
 tourSchema.post(/^find/,function(docs,next){
-  console.log(docs);
+  // console.log(docs);
   next();
 });
 
 //Aggregation middleware
 tourSchema.pre('aggregate',function(next){
-  console.log(this);
+  // console.log(this);
 });
 
 const Tour = mongoose.model('Tour',tourSchema); 

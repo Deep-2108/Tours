@@ -10,6 +10,18 @@ const signToken=id =>{
     });
 }
 
+const  createSendToken =(user,statusCode,res)=>{
+    const token=signToken(user._id);
+
+    res.status(statusCode).json({
+        status:'Success',
+        token,
+        data:{
+            user:user,
+        }
+    });
+}
+
 exports.signup = catchAsync( async (req,res,next)=>{
     const newUser=await User.create({
         name:req.body.name,
@@ -17,15 +29,8 @@ exports.signup = catchAsync( async (req,res,next)=>{
         password:req.body.password,
         passwordConfirm:req.body.passwordConfirm,
     })
-    const token=signToken(newUser._id);
-
-    res.status(201).json({
-        status:'Success',
-        token,
-        data:{
-            user:newUser,
-        }
-    });
+    createSendToken(newUser,201,res);
+   
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -46,12 +51,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 3) If everything ok, send token
 
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+ 
+    createSendToken(user,200,res);
 });
 
 
@@ -90,5 +91,22 @@ exports.restrictTo= (...roles) => {
         }
         next();
 
-    }
+    };
+};
+
+exports.forgotPassword=catchAsync(async (req,res,next) =>{
+    // 1) Get User based on posted email
+        const user=await User.findOne({email:req.body.email})
+        if(!user){
+            return next(new AppError('There is no user with email address',404));
+        }
+
+    // 2) generate the random reset token
+        const resetToken= user.createPasswordResetToken();
+        await user.save({ validateBeforeSave: false});
+
+    // 3) send it to user's email
+});
+exports.resetPassword=(req,res,next) =>{
+
 }
